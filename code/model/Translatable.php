@@ -1296,16 +1296,14 @@ class Translatable extends DataExtension implements PermissionProvider {
 		}
 		$joinOnClause = sprintf('"%s_translationgroups"."OriginalID" = "%s"."ID"', $baseDataClass, $baseDataClass);
 		if($this->owner->hasExtension("Versioned") && $stage) {
-			$translations = Versioned::get_by_stage(
-				$baseDataClass,
-				$stage,
-				$filter, 
-				null
-			)->leftJoin("{$baseDataClass}_translationgroups", $joinOnClause);
+			$translations = Versioned::get_by_stage($baseDataClass, $stage, $filter, null)
+				->leftJoin("{$baseDataClass}_translationgroups", $joinOnClause)
+				->sort(sprintf('"%s_translationgroups"."TranslationGroupID"', $baseDataClass));
 		} else {
 			$translations = DataObject::get($baseDataClass)
 				->where($filter)
-				->leftJoin("{$baseDataClass}_translationgroups", $joinOnClause);
+				->leftJoin("{$baseDataClass}_translationgroups", $joinOnClause)
+				->sort(sprintf('"%s_translationgroups"."TranslationGroupID"', $baseDataClass));
 		}
 
 		// only re-enable locale-filter if it was enabled at the beginning of this method
