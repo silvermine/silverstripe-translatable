@@ -1185,10 +1185,12 @@ class Translatable extends DataExtension implements PermissionProvider {
 		$isTranslationMode = $this->owner->Locale != Translatable::default_locale();
 		
 		if($originalRecord && $isTranslationMode) {
-			// Remove parent page dropdown
-			$fields->removeByName("ParentType");
-			$fields->removeByName("ParentID");
-			
+			if ($originalRecord->Locale === Translatable::default_locale()) {
+				// Remove parent page dropdown
+				$fields->removeByName("ParentType");
+				$fields->removeByName("ParentID");
+			}
+
 			$translatableFieldNames = $this->getTranslatableFields();
 			$allDataFields = $fields->dataFields();
 			
